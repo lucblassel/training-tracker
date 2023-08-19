@@ -1,0 +1,271 @@
+<!doctype html>
+<html>
+  {{ template "header" . }}
+  <body>
+    {{ template "navbar" . }}
+    <div class="container max-w-screen-2xl mx-auto mt-20 p-5">
+      <div class="section content top-10">
+        <h1 class="text-3xl font-bold">
+          {{ .Run.Slug }} {{ if .Run.Finished }} {{ if .Run.Successful }} ✅ {{
+          else}} ❌ {{ end }} {{ end}}
+        </h1>
+        {{ if .error }}
+        <div>{{ .error }}</div>
+        {{ else }}
+        <div class="flex flex-row justify-between">
+          <div class="flex flex-row gap-4 mt-3 gray-300">
+            <div class="font-medium">
+              Created:
+              <span class="font-light"
+                >{{ .Run.CreatedAt.Format "2006/01/02" }}</span
+              >
+            </div>
+            <div class="font-medium">
+              Updated:
+              <span class="font-light"
+                >{{ .Run.LastPulled.Format "2006/01/02 15:04" }}</span
+              >
+            </div>
+          </div>
+          <div class="flex flex-row gap-4 mt-3 gray-300">
+            <a href="/duplicate/{{ .Run.Slug }}">
+              <button
+                type="button"
+                class="rounded-lg bg-gray-100 hover:bg-gray-200 p-3"
+                title="Duplicate Run"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  class="w-6 h-6"
+                  height="1.5rem"
+                  width="1.5rem"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 01-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 011.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 00-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 01-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5a3.375 3.375 0 00-3.375-3.375H9.75"
+                  />
+                </svg>
+              </button>
+            </a>
+
+            <div class="dropdown closed inline-block relative">
+              <button
+                type="button"
+                class="rounded-lg bg-gray-100 hover:bg-gray-200 p-3"
+              >
+                {{ if .Run.Finished }}
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  class="w-6 h-6"
+                  height="1.5rem"
+                  width="1.5rem"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z"
+                  />
+                </svg>
+                {{ else }}
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  class="w-6 h-6"
+                  height="1.5rem"
+                  width="1.5rem"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M5.25 7.5A2.25 2.25 0 017.5 5.25h9a2.25 2.25 0 012.25 2.25v9a2.25 2.25 0 01-2.25 2.25h-9a2.25 2.25 0 01-2.25-2.25v-9z"
+                  />
+                </svg>
+                {{ end }}
+              </button>
+              <div class="h-2 transparent"></div>
+              <div
+                class="menu p-4 border border-md border-gray-300 bg-gray-100 border-gray-200 rounded-lg absolute right-0 z-10 hidden text-right"
+              >
+                {{ if .Run.Finished }}
+                <form action="/toggle/{{ .Run.Slug }}" method="POST">
+                  <button class="hover:font-medium px-4 py-2" role="menuitem">
+                    <span>Mark&nbsp;as&nbsp;unfinished&nbsp;▶️</span>
+                  </button>
+                </form>
+                {{ end }}
+                <form action="/success/{{ .Run.Slug }}" method="POST">
+                  <button class="hover:font-medium px-4 py-2" role="menuitem">
+                    <span>Mark&nbsp;as&nbsp;success&nbsp;✅</span>
+                  </button>
+                </form>
+                <form action="/fail/{{ .Run.Slug }}" method="POST">
+                  <button class="hover:font-medium px-4 py-2" role="menuitem">
+                    <span>Mark&nbsp;as&nbsp;failure&nbsp;❌</span>
+                  </button>
+                </form>
+              </div>
+            </div>
+
+            <a href="/edit/{{ .Run.Slug }}?id={{ .Run.ID }}">
+              <button
+                type="button"
+                class="rounded-lg bg-gray-100 hover:bg-gray-200 p-3"
+                title="Edit Run"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  class="w-6 h-6"
+                  height="1.5rem"
+                  width="1.5rem"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"
+                  />
+                </svg>
+              </button>
+            </a>
+            <a href="/pull/{{ .Run.Slug }}">
+              <button
+                type="button"
+                class="rounded-lg bg-gray-100 hover:bg-gray-200 p-3"
+                title="Update Run"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  class="w-6 h-6"
+                  height="1.5rem"
+                  width="1.5rem"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"
+                  />
+                </svg>
+              </button>
+            </a>
+
+            <form
+              action="/delete/{{.Run.Slug}}"
+              method="POST"
+              onsubmit="return confirm('Do you really want to delete this run?');"
+            >
+              <button
+                type="submit"
+                class="rounded-lg bg-gray-100 hover:bg-gray-200 p-3"
+                title="Delete Run"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  class="w-6 h-6"
+                  height="1.5rem"
+                  width="1.5rem"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
+                  />
+                </svg>
+              </button>
+            </form>
+          </div>
+        </div>
+        <hrule class="hrule" />
+
+        <p class="my-2 font-bold text-2xl">Current Step: {{ .currentStep }}</p>
+        <div class="my-8">
+          <h3 class="text-2xl font-bold mb-2">Description:</h3>
+          <p class="px-4 py-2">{{ .Run.Desc }}</p>
+        </div>
+
+        <div class="p-2">
+          <h3 class="text-xl font-semibold mt-10">Loss Values</h3>
+          <div id="loss-graph" class="chart mx-auto"></div>
+          <h3 class="text-xl font-semibold mt-10">Learning Rate</h3>
+          <div id="lr-graph" class="chart mx-auto"></div>
+        </div>
+        {{ end }}
+      </div>
+    </div>
+  </body>
+  <script>
+
+    var dropdown = document.querySelector(".dropdown");
+    var menu = document.querySelector(".dropdown .menu");
+    dropdown.addEventListener("mouseenter", (e) => {
+      if (dropdown.classList.contains('closed')) {
+        dropdown.classList.remove("closed");
+        menu.classList.remove("hidden");
+      }
+    });
+
+    dropdown.addEventListener("mouseleave", (e) => {
+      if (!dropdown.classList.contains('closed')) {
+        dropdown.classList.add("closed");
+        menu.classList.add("hidden");
+      }
+    });
+    var lossDiv = document.getElementById("loss-graph");
+    var lrDiv = document.getElementById("lr-graph");
+
+    const {train_loss, val_loss, lr} = {{ .Traces  }};
+    const updatemenus = [{
+      direction: "bottom",
+      buttons:[
+            {
+              args:[{"yaxis.type": "linear"}],
+              label:"Linear",
+              method:"relayout",
+          },
+          {
+              args:[{"yaxis.type": "log"}],
+              label:"Log",
+              method:"relayout",
+          },
+      ],
+    }];
+
+    var layout = {
+      width: 1200,
+      height: 400,
+      updatemenus: updatemenus,
+      margin: {t: 60, l: 200},
+      autosize: true
+    };
+
+    var modebar = {
+      modeBarButtonsToRemove: ["select2d", "lasso2d", "pan2d", "toggleSpikelines", "zoomIn2d", "zoomOut2d", "resetScale2d"],
+      displaylogo: false,
+    };
+
+    Plotly.newPlot(lossDiv, [train_loss, val_loss], layout, modebar);
+    Plotly.newPlot(lrDiv, [lr], layout, modebar);
+  </script>
+</html>

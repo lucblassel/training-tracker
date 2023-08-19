@@ -1,0 +1,30 @@
+<!doctype html>
+<html>
+  {{ template "header" . }}
+  <body>
+    {{ template "navbar" . }}
+    <div class="container max-w-screen-2xl mx-auto mt-20 p-10">
+      <div class="section content top-10">
+        <div class="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-5">
+          {{ range .runs }}
+          <a
+            href="/run/{{ .Slug }}"
+            class="border-2 rounded-lg p-3 hover:bg-gray-100 hover:border-gray-400"
+          >
+            <h3 class="text-2xl font-semibold mt-4 mb-4">
+              {{ .Slug }} {{ if .Finished }}
+                {{ if .Successful }}
+                  ✅
+                {{ else }}
+                  ❌
+                {{ end }}
+              {{ end }}
+            </h3>
+            <p class="text-lg font-normal">{{ .Desc}}</p>
+          </a>
+          {{ end }}
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,12 @@
+{{ define "header" }}
+<head>
+  <title>Training tracker | {{.title }}</title>
+  <link rel="stylesheet" href="/files/styles/final.css" />
+  {{ if .Plotly }}
+  <script
+    src="https://cdn.plot.ly/plotly-2.25.2.min.js"
+    charset="utf-8"
+  ></script>
+  {{ end }}
+</head>
+{{ end }}
