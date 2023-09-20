@@ -16,6 +16,9 @@ You can then specify the fully qualified path to the csv containing the training
 The program expects the csv you give it to have the following fields: `['train_loss', 'val_loss', 'step', 'lr']`, in any order you wish.  
 By default it will update all running trainings every 5 minutes using rsync. In order to do this you need to setup you `~/.ssh/config` file in order to be able to automatically run rsync without prompting for a password. You can also force an update by clicking on the update button. 
 
+## Developing
+This repo uses [TailwindCSS](https://tailwindcss.com) in order to style the templates. In order to make changes you can install the [TailwindCSS CLI](https://tailwindcss.com/blog/standalone-cli) and run `./tailwindcss -i static/styles/tailwind.css -o static/styles/final.css -w -m` in the background from the root of the project. 
+
 ## TODO
 - [ ] Add functional tags to organize and filter runs
 - [ ] Add rolling average curve so you can see training trends. 
