@@ -1,0 +1,29 @@
+<!doctype html>
+<html>
+  {{ template "header" . }}
+  <body>
+    {{ template "navbar" . }}
+    <div class="container max-w-screen-2xl mx-auto mt-20 p-10">
+      <div class="section content top-10">
+        {{ if gt (len .Tags) 0 }}
+        <div class="flex gap-4 mx-auto justify-center">
+          {{ range .Tags }}
+          <a
+            class="font-semibold text-2xl p-2 text-{{.Color}}-500 hover:text-{{.Color}}-700"
+            href="/tag/{{.Name}}"
+            >#{{ .Name }}</a
+          >
+          {{ end }}
+        </div>
+        {{ else }}
+        <div class="text-3xl mx-auto mt-10">
+          No Tags yet...
+          <a class="font-bold underline hover:text-gray-700" href="/newtag"
+            >Create one ?</a
+          >
+          {{ end }}
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

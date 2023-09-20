@@ -5,7 +5,7 @@
     {{ template "navbar" . }}
     <div class="container max-w-screen-2xl mx-auto mt-20 p-5">
       <div class="section content top-10">
-        <h1 class="text-3xl font-bold">
+        <h1 class="text-3xl font-bold pt-5">
           {{ .Run.Slug }} {{ if .Run.Finished }} {{ if .Run.Successful }} ✅ {{
           else}} ❌ {{ end }} {{ end}}
         </h1>
@@ -13,18 +13,27 @@
         <div>{{ .error }}</div>
         {{ else }}
         <div class="flex flex-row justify-between">
-          <div class="flex flex-row gap-4 mt-3 gray-300">
-            <div class="font-medium">
-              Created:
-              <span class="font-light"
-                >{{ .Run.CreatedAt.Format "2006/01/02" }}</span
-              >
+          <div class="flex flex-col">
+            <div class="flex flex-row gap-4 mt-3 gray-300 text-base">
+              <div class="font-medium">
+                Created:
+                <span class="font-light"
+                  >{{ .Run.CreatedAt.Format "2006/01/02" }}</span
+                >
+              </div>
+              <div class="font-medium">
+                Updated:
+                <span class="font-light"
+                  >{{ .Run.LastPulled.Format "2006/01/02 15:04" }}</span
+                >
+              </div>
             </div>
-            <div class="font-medium">
-              Updated:
-              <span class="font-light"
-                >{{ .Run.LastPulled.Format "2006/01/02 15:04" }}</span
-              >
+            <div class="font-medium text-sm text-gray-700">
+              Remote:
+              <span class="font-light">
+                {{ if gt 20 10 }} {{ printf "%.80s..." .Run.Remote }} {{ else }}
+                {{ .Run.Remote }} {{ end }}
+              </span>
             </div>
           </div>
           <div class="flex flex-row gap-4 mt-3 gray-300">
@@ -197,9 +206,17 @@
             </form>
           </div>
         </div>
+
         <hrule class="hrule" />
 
-        <p class="my-2 font-bold text-2xl">Current Step: {{ .currentStep }}</p>
+        <p class="my-2 font-bold text-2xl">
+          {{ if .Run.Finished }}
+            Last Step:
+          {{ else }}
+            Current Step: 
+          {{ end }}
+          {{ .currentStep }}
+        </p>
         <div class="my-8">
           <h3 class="text-2xl font-bold mb-2">Description:</h3>
           <p class="px-4 py-2">{{ .Run.Desc }}</p>

@@ -1,0 +1,76 @@
+<!doctype html>
+<html>
+   {{ template "header" . }}
+   <body>
+      {{ template "navbar" . }}
+      <div class="container max-w-screen-2xl mx-auto mt-20 p-5">
+         <div class="section content top-10">
+            <h1 class="text-3xl font-bold">Editing</h1>
+            {{ if .error }}
+            <div>{{ .error }}</div>
+            {{ else }}
+            {{ if .id }}
+            <form class="p-4" action="/savetag?id={{ .id }}" method="POST">
+               {{ else }}
+            <form class="p-4" action="/savetag" method="POST">
+               {{ end }}
+               <div class="mb-6">
+                  <label for="tag_name" class="block font-medium mb-2">Name: </label>
+                  <input
+                     type="text"
+                     id="tag_name"
+                     name="tag_name"
+                     class="bg-gray-100 font-semibold text-3xl p-2 rounded-lg border-0 w-full required form-input"
+                     />
+               </div>
+               <div class="mb-6 flex gap-4">
+                  <label for="tag_color" class="block font-medium"
+                     >Color:
+                  </label>
+                  <select
+                     type="color"
+                     id="tag_color"
+                     name="tag_color"
+                     class="required rounded-lg form-select"
+                     >
+                     {{ range .Colors }}
+                     <option class="text-{{.}}-500"> {{ . }}</option>
+                     {{ end }}
+                  </select>
+               </div>
+               <button
+                  type="submit"
+                  class="align-right p-3 rounded-lg bg-gray-100 hover:bg-gray-200"
+                  >
+               Save
+               </button>
+            </form>
+            <div>
+               <div class="flex flex-wrap text-xl font-bold gap-2">
+                  <span class="text-slate-500">slate</span>
+                  <span class="text-zinc-500">zinc</span>
+                  <span class="text-stone-500">stone</span>
+                  <span class="text-red-500">red</span>
+                  <span class="text-orange-500">orange</span>
+                  <span class="text-amber-500">amber</span>
+                  <span class="text-yellow-500">yellow</span>
+                  <span class="text-lime-500">lime</span>
+                  <span class="text-green-500">green</span>
+                  <span class="text-emerald-500">emerald</span>
+                  <span class="text-teal-500">teal</span>
+                  <span class="text-cyan-500">cyan</span>
+                  <span class="text-sky-500">sky</span>
+                  <span class="text-blue-500">blue</span>
+                  <span class="text-indigo-500">indigo</span>
+                  <span class="text-violet-500">violet</span>
+                  <span class="text-purple-500">purple</span>
+                  <span class="text-fuchsia-500">fuchsia</span>
+                  <span class="text-pink-500">pink</span>
+                  <span class="text-rose-500">rose</span>
+               </div>
+            </div>
+         {{ end }}
+         </div>
+      </div>
+   </body>
+</html>
