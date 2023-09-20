@@ -86,9 +86,12 @@ func main() {
 
 	router := gin.Default()
 
+  // PROD SETTING // <- embed templates in binary
 	templ := template.Must(template.New("").ParseFS(templateFiles, "templates/*.html"))
 	router.SetHTMLTemplate(templ)
+  // DEV SETTING // <- load templates from disk
 	// router.LoadHTMLGlob("./templates/*")
+  // END // 
 
 	// DEV TEST
 	// router.GET("/populate", populate)
@@ -99,27 +102,36 @@ func main() {
 		c.Request.URL.Path = "/"
 		router.HandleContext(c)
 	})
+  router.GET("/finished", controllers.GetFinishedRuns)
+  router.GET("/running", controllers.GetRunningRuns)
 	router.GET("/run/:slug", controllers.GetRun)
 	router.GET("/pull/:slug", controllers.PullRun)
 	router.GET("/edit/:slug", controllers.EditRun)
 	router.GET("/duplicate/:slug", controllers.DuplicateRun)
 	router.GET("/update", controllers.UpdateAll)
 	router.GET("/new", controllers.CreateRun)
+	router.GET("/tags", controllers.GetTags)
+	router.GET("/newtag", controllers.CreateTag)
 
 	router.POST("/toggle/:slug", controllers.ToggleRunFinished)
 	router.POST("/fail/:slug", controllers.MarkRunFailed)
 	router.POST("/success/:slug", controllers.MarkRunSuccessful)
 	router.POST("/save/", controllers.SaveRun)
 	router.POST("/delete/:slug", controllers.DeleteRun)
+	router.POST("/savetag/", controllers.SaveTag)
 
+  // PROD SETTING // <- Embed assets in binary
 	newFS, err := fs.Sub(staticFiles, "static")
 	if err != nil {
 		log.Fatalf("Error loading static files: %v", err)
 	}
 	router.StaticFS("/files", http.FS(newFS))
-	router.NoRoute(func(c *gin.Context) {
-		c.HTML(http.StatusNotFound, "404.html", gin.H{"title": "Page not found"})
-	})
+  // DEV SETTING // <- load assets from disk
+	// router.Static("/files", "./static/")
+	// router.NoRoute(func(c *gin.Context) {
+	// 	c.HTML(http.StatusNotFound, "404.html", gin.H{"title": "Page not found"})
+	// })
+  // END //
 
 	// Open Web Browser
 	go func() {

@@ -35,10 +35,34 @@ type Run struct {
 	Tags       []*Tag    `json:"tags" gorm:"many2many:run_tags;"`
 }
 
+var TAGCOLORS []string = []string{
+  "slate",
+  "zinc",
+  "stone",
+  "red",
+  "orange",
+  "amber",
+  "yellow",
+  "lime",
+  "green",
+  "emerald",
+  "teal",
+  "cyan",
+  "sky",
+  "blue",
+  "indigo",
+  "violet",
+  "purple",
+  "fuchsia",
+  "pink",
+  "rose",
+}
+
 type Tag struct {
 	gorm.Model
-	Name string `json:"name"`
-	Runs []*Run `json:"runs" gorm:"many2many:run_tags;"`
+	Name  string `json:"name"`
+	Color string `json:"color"`
+	Runs  []*Run `json:"runs" gorm:"many2many:run_tags;"`
 }
 
 type Trace struct {

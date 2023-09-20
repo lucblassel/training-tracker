@@ -25,6 +25,18 @@ func GetRuns(c *gin.Context) {
 	c.HTML(http.StatusOK, "index.html", gin.H{"title": "Training runs", "runs": runs})
 }
 
+func GetFinishedRuns(c *gin.Context) {
+	var runs []models.Run
+	models.DB.Where(models.Run{Finished: true}).Find(&runs)
+	c.HTML(http.StatusOK, "index.html", gin.H{"title": "Finished runs", "runs": runs})
+}
+
+func GetRunningRuns(c *gin.Context) {
+	var runs []models.Run
+	models.DB.Where(map[string]interface{}{"Finished": false}).Find(&runs)
+	c.HTML(http.StatusOK, "index.html", gin.H{"title": "Finished runs", "runs": runs})
+}
+
 func GetRun(c *gin.Context) {
 	var run models.Run
 	if result := models.DB.Where("slug = ?", c.Param("slug")).First(&run); result.Error != nil {
@@ -225,7 +237,56 @@ func UpdateAll(c *gin.Context) {
 	}
 
 	// Update last pulled
-	models.DB.Save(&runs)
+	if len(runs) > 0 {
+		models.DB.Save(&runs)
+	}
 
 	c.Redirect(http.StatusFound, "/")
+}
+
+func GetTags(c *gin.Context) {
+	var tags []models.Tag
+	if result := models.DB.Find(&tags); result.Error != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Could not fetch tags from DB"})
+		return
+	}
+
+	c.HTML(http.StatusOK, "tags.html", gin.H{"Tags": tags})
+}
+
+func SaveTag(c *gin.Context) {
+	var form CreateTagInput
+	c.ShouldBind(&form)
+
+	id := c.Query("id")
+	var tag models.Tag
+	if id != "" {
+		if result := models.DB.Where("id = ?", id).First(&tag); result.Error != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Tag not found"})
+			return
+		}
+	}
+
+	tag.Name = form.Name
+	tag.Color = form.Color
+
+	if result := models.DB.Save(&tag); result.Error != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Error whil updating tag"})
+		return
+	}
+
+	c.Redirect(http.StatusFound, "/tags")
+}
+
+type CreateTagInput struct {
+	Name  string `json:"name" binding:"required" form:"tag_name"`
+	Color string `json:"color" bondong:"required" form:"tag_color"`
+}
+
+func CreateTag(c *gin.Context) {
+	c.HTML(
+		http.StatusOK,
+		"edit_tag.html",
+		gin.H{"title": "New Tag", "Tag": models.Tag{}, "Colors": models.TAGCOLORS},
+	)
 }
