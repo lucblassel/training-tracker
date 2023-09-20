@@ -61,6 +61,8 @@ Temporary Items
 
 *.db
 *.sqlite
+*.sql
 *.json
 data/
 training-tracker
+tailwindcss
